@@ -41,7 +41,7 @@ def set_data_to_send(data_list):
 
 
 def get_data_to_send():
-    c = sent_data.cappedCollection.find().sort({"$natural":-1}).limit(50)
+    c = sent_data.find().sort("$natural", -1).limit(1)
     return list(c)
 
 
