@@ -32,7 +32,6 @@ def admin():
 def isAdmin():
     name = request.values.get("n")
     if (name == "Dhaval" or name == "Roopesh" or name == "Utkarsh"):
-        print(name)
         return "true"
     else:
         return "false"
