@@ -1,2 +1,2 @@
 Flask
-pymongo
+redis
