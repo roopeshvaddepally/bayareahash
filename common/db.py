@@ -20,8 +20,8 @@ def unsubscribe(email):
     user_table.update({"email": email}, {"$set": {"subscribed": False}})
 
 def admin_query(start_date, end_date):
-    data = data_dump.find({"date" : {"$gte": "start_date", "$lt": "end_date"}})
-    return data
+    cursor = data_dump.find({"date" : {"$gte": "start_date", "$lt": "end_date"}})
+    return list(cursor)
 
 #This function takes a list of map
 def add_data(date, data_list):
