@@ -3,11 +3,12 @@ import logging
 from marrow.mailer import Mailer, Message
 import datetime
 from construct_email import construct_html_email
+from settings import email_username, email_password, email_from
 
-username = ''
-password = ''
-from_email = ''
-subject = ''
+username = email_username
+password = email_password
+from_email = email_from
+subject = 'something something'
 logging.basicConfig(filename='email.log', level=logging.INFO)
 
 class SendEmail(object):
