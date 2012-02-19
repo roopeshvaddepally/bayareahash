@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, jsonify
 from common.db import subscribe_email, confirm, unsubscribe
 from common.mail import SendEmail
 
-
 app = Flask(__name__)
 
 mailer = SendEmail()
