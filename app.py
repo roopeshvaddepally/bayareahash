@@ -1,8 +1,10 @@
 from flask import Flask, render_template, request
-from common.db import subscribe_email
-from common.mail import send_email
+from common.db import subscribe_email, confirm, unsubscribe
+from common.mail import SendEmail
 
 app = Flask(__name__)
+
+mailer = SendEmail()
 
 
 @app.route("/")
@@ -14,7 +16,7 @@ def index():
 def subscribe():
     email = request.values.get("email")
     token = subscribe_email(email)
-    send_email(email, token)
+    mailer.send_email(email, token)
     return ''
 
 
