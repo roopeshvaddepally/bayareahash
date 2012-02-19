@@ -40,7 +40,10 @@ def data_to_send(data_list):
                 "meetup_date" : data["meetup_date"]}}, True)
 
 
-#This function takes a list of map
+def track_url_link(user_email, visited_links):
+    user_table.update({"email": user_email}, {"$push" : {"visited_links" : visited_links}})
+
+
 def add_data(date, data_list):
     for data in data_list:
         data_dump.update({"url" : data["url"]},
