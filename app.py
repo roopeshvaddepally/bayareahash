@@ -1,6 +1,7 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from common.db import subscribe_email, confirm, unsubscribe
 from common.mail import SendEmail
+
 
 app = Flask(__name__)
 
@@ -16,13 +17,35 @@ def index():
 def subscribe():
     email = request.values.get("email")
     token = subscribe_email(email)
-    mailer.send_email(email, token)
+    html_body = render_template("confirmation.html", email=email, token=token)
+    text_body = render_template("confirmation.txt", email=email, token=token)
+    mailer.send(email, html_body, text_body)
     return ''
 
 
 @app.route("/admin")
 def admin():
-    return "admin panel"
+    return render_template("admin.html")
+
+
+@app.route("/isadmin")
+def isAdmin():
+    name = request.values.get("n")
+    if (name == "Dhaval" or name == "Roopesh" or name == "Utkarsh"):
+        return "true"
+    else:
+        return "false"
+
+
+@app.route("/curate")
+def curate():
+    return jsonify(aaData = [dict(username='g.user',email="g.user.email",id="g.user.id"), dict(username='g.user',email="g.user.email",id="g.user.id"),dict(username='g.user',email="g.user.email",id="g.user.id"),dict(username='g.user',email="g.user.email",id="g.user.id")])
+
+
+@app.route("/filtered")
+def admin():
+    ids = request.values.get("ids")
+    return "true"
 
 @app.route("/l")
 def track():
