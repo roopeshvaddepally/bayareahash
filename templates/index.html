@@ -12,7 +12,8 @@
         url: "/subscribe?email=" + email,
         context: document.body,
         success: function(){
-          alert('submitted');
+          $('#form-field').hide();
+          $('#confirmed').show();
         }
       });
     }
@@ -107,6 +108,10 @@
       color: white;
       opacity: 0.7;
     }
+    #confirmed {
+      color: white;
+      font-size: 14px;
+    }
   </style>
   <title>Bay Area {}'ed</title>
   </head>
@@ -115,10 +120,13 @@
       <div id="content" class="layoutbox loginbox">
         <div class="lrdiscoverwidget" rel="launchrock.com" data-background="off">
           <div id="logo">Bay Area {}'ed</div>
-          <div id="exp-text"> Things to do for hackers in the Bay Area</br> Things to do for hackers in the Bay Area </br> Things to do for hackers in the Bay Area</br></div>>
-          <input type="text" placeholder="email@address.com" autocorrect="off" autocapitalize="off" data-initial="email@address.com" id="email-IZGCNZBC" class="field">
-          <input type="submit" name="submit" id="submit-IZGCNZBC" title="GO" value="GO" class="submit" onclick="submit()">
-          <div id="message">Subscribe to our weekly emails for things to do.</div>
+          <div id="exp-text"> Things to do for hackers in the Bay Area</br> Things to do for hackers in the Bay Area </br> Things to do for hackers in the Bay Area</br></div>
+          <div id="form-field">
+            <input type="text" placeholder="email@address.com" autocorrect="off" autocapitalize="off" data-initial="email@address.com" id="email-IZGCNZBC" class="field">
+            <input type="submit" name="submit" id="submit-IZGCNZBC" title="GO" value="GO" class="submit" onclick="submit()">
+            <div id="message">Subscribe to our weekly emails for things to do.</div>
+          </div>
+          <div id="confirmed" style="display:none;">Subscribed</div>
         </div>
       </div>
     </div>
