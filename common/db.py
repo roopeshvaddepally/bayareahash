@@ -1,7 +1,10 @@
 from settings import data_dump, sent_data, user_table
+import hashlib
 
 def subscribe_email(email):
-    token = "abcdef" # TODO: use a md5 hash here
+    m = hashlib.md5()
+    m.update(email)
+    token = m.digest()
     user_table.insert({
         "email": email,
         "token": token,
