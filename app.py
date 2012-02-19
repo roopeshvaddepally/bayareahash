@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from common.db import subscribe_email, confirm, unsubscribe, admin_query
 from common.time import get_next_week
 from common.mail import SendEmail
+import os
 
 app = Flask(__name__)
 
@@ -65,6 +66,11 @@ def unsubscribe_email():
     email = request.values.get("email")
     unsubscribe(email)
 
+@app.route("/trigger")
+def trigger():
+    os.system("python common/run.py &")
+    return "Your request has been submitted, sending out emails now!"
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.debug = True
+    app.run()

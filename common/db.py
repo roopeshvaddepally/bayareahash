@@ -36,7 +36,7 @@ def admin_query():
     return arr
 
 
-def data_to_send(data_list):
+def set_data_to_send(data_list):
     for data in data_list:
         sent_data.update({"url" : data["url"]},
             {"$set" :
@@ -46,6 +46,17 @@ def data_to_send(data_list):
                 "description" : data["description"],
                 "thumbnail" : data["thumbnail"],
                 "meetup_date" : data["meetup_date"]}}, True)
+
+
+def get_data_to_send():
+    c = sent_data.find().sort("$natural", -1).limit(1)
+    return list(c)
+
+
+def get_users_to_send_data():
+    c = user_table.find({}, {"email": 1})
+    return list(c)
+
 
 def track_url_link(user_email, visited_links):
     user_table.update({"email": user_email}, {"$push" : {"visited_links" : visited_links}})
