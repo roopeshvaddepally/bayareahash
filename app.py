@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
@@ -14,7 +14,7 @@ def subscribe():
 	email = request.values.get("email")
 	token = store_email(email)
 	send_email(email, token)
-	return redirect(url_for("/subscribed"))
+	return ''
 
 @app.route("/subscribed")
 def subscribed():
