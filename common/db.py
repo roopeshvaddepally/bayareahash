@@ -5,22 +5,18 @@ def subscribe_email(email):
     m = hashlib.md5()
     m.update(email)
     token = m.digest()
-    user_table.insert({
-        "email": email,
+    user_table.update({"email": email}, {"$set": {
         "token": token,
         "subscribed": False
-    })
+    }}, True)
     return token
 
 def confirm(email, token):
     user = user_table.find_one({"email": email}, {"token": 1})
     if user.token == token:
-        user_table.update({
-            "email": email
-        }, {
-            "subscribed": True
-        })
+        user_table.update({"email": email}, {"subscribed": True})
 
-def unsubscribe(email):pass
+def unsubscribe(email):
+    user_table.update({"email": email}, {"$set": {"subscribed": False}})
 
 def admin_query(start_date, end_date):pass
