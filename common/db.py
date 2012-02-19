@@ -32,6 +32,7 @@ def admin_query():
         k["description"] = (k["description"][:75] + '..') if len(k["description"]) > 75 else k["description"]
         k["_id"] = str(k["_id"])
         k["date_crawled"] = k["date_crawled"].strftime('%d%b%Y')
+        k["DT_RowId"] = str(k["_id"])
     return arr
 
 
