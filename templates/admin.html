@@ -64,9 +64,20 @@
   }
 
   function submit() {
-    console.log();
+    var ids = [];
     $.each($('.row_selected'), function(index, value) { 
-      console.log($(value).attr('id'));
+      ids.push($(this).attr('id'));
+    });
+    var idsStr = ids.join(',');
+    $.ajax({
+      url: "/filtered?ids=" + idsStr,
+      context: document.body,
+      success: function(resp){
+        if(resp === "true") {
+          alert('howdy');
+        } else {
+        }
+      }
     });
   }
   </script>

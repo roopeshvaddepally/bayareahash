@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from common.db import subscribe_email, confirm, unsubscribe, admin_query
+from common.db import *
 from common.time import get_next_week
 from common.mail import SendEmail
 import os
@@ -48,6 +48,8 @@ def curate():
 @app.route("/filtered")
 def filtered():
     ids = request.values.get("ids")
+    filtered = filter_ids_based_on(ids.split(","))
+    set_data_to_send(filtered)
     return "true"
 
 @app.route("/l")

@@ -1,5 +1,6 @@
 from settings import data_dump, sent_data, user_table
 from common.time import get_next_week
+from  pymongo.objectid import ObjectId
 import hashlib
 
 
@@ -46,6 +47,12 @@ def set_data_to_send(data_list):
                 "description" : data["description"],
                 "thumbnail" : data["thumbnail"],
                 "meetup_date" : data["meetup_date"]}}, True)
+
+
+def filter_ids_based_on(ids):
+    i = [ObjectId(each) for each in ids]
+    cursor = data_dump.find({"_id" : {"$in" : i} })
+    return list(cursor)
 
 
 def get_data_to_send():
