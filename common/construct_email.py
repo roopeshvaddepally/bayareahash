@@ -1,23 +1,23 @@
-import ast
 from string import Template
-
+from common.db import get_data_to_send, get_users_to_send_data
+from common.mail import SendEmail
 
 def construct_html_email(email, data):
     result_map = {"html": "<ol>", "plain": ""}
-    for values_set in data:
-        for el in values_set:
-            el_dict = ast.literal_eval(el)
-            html_data = "<li><a href=%s>%s</a></li><br />" % (el_dict["link"],
-                                                              el_dict["title"])
-            plain_data = "%s : %s /n" % (el_dict["link"], el_dict["title"])
-            result_map["html"] += html_data
-            result_map["plain"] += plain_data
+
+    user_list = get_users_to_send_data()
+    data = get_data_to_send()
+
 
     #create html
-    f = open("templates/email_template.html", "r")
+    f = open("templates/email.html", "r")
     text = f.read()
     t = Template(unicode(text, errors='ignore'))
-    text = t.substitute(links=result_map["html"] + "</ol>", keywords=[])
+    text = t.substitute(links=result_map["html"] + "</ol>")
     result_map["html"] = text
+
+    send_mail = SendEmail()
+    for user in user_list:
+        send_mail.send(to=user["email"], html_body="", plain_body=data)
 
     return result_map

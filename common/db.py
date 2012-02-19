@@ -28,7 +28,7 @@ def admin_query(start_date, end_date):
     return list(cursor)
 
 
-def data_to_send(data_list):
+def set_data_to_send(data_list):
     for data in data_list:
         sent_data.update({"url" : data["url"]},
             {"$set" :
@@ -39,6 +39,15 @@ def data_to_send(data_list):
                 "thumbnail" : data["thumbnail"],
                 "meetup_date" : data["meetup_date"]}}, True)
 
+
+def get_data_to_send():
+    c = sent_data.cappedCollection.find().sort({"$natural":-1}).limit(50)
+    return list(c)
+
+
+def get_users_to_send_data():
+    c = user_table.find({}, {"email": 1})
+    return list(c)
 
 def track_url_link(user_email, visited_links):
     user_table.update({"email": user_email}, {"$push" : {"visited_links" : visited_links}})
