@@ -19,4 +19,18 @@ def confirm(email, token):
 def unsubscribe(email):
     user_table.update({"email": email}, {"$set": {"subscribed": False}})
 
-def admin_query(start_date, end_date):pass
+def admin_query(start_date, end_date):
+    data = data_dump.find({"date" : {"$gte": "start_date", "$lt": "end_date"}})
+    return data
+
+#This function takes a list of map
+def add_data(date, data_list):
+    for data in data_list:
+        data_dump.update({"url" : data["url"]},
+         {"$set":
+                {"category": data["category"],
+                 "url" : data["url"],
+                 "title" : data["title"],
+                 "description" : data["description"],
+                 "thumbnail" : data["thumbnail"],
+                  "date" : date}})
