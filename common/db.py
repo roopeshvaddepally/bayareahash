@@ -1,4 +1,5 @@
 from settings import data_dump, sent_data, user_table
+from common.time import get_next_week
 import hashlib
 
 
@@ -23,9 +24,15 @@ def unsubscribe(email):
     user_table.update({"email": email}, {"$set": {"subscribed": False}})
 
 
-def admin_query(start_date, end_date):
-    cursor = data_dump.find({"date_crawled" : {"$gte": start_date, "$lt": end_date}})
-    return list(cursor)
+def admin_query():
+    times = get_next_week()
+    cursor = data_dump.find({"date_crawled" : {"$gte": times[0], "$lt": times[1]}})
+    arr = list(cursor)
+    for k in arr:
+        k["description"] = (k["description"][:75] + '..') if len(k["description"]) > 75 else k["description"]
+        k["_id"] = str(k["_id"])
+        k["date_crawled"] = k["date_crawled"].strftime('%d%b%Y')
+    return arr
 
 
 def set_data_to_send(data_list):
@@ -48,6 +55,7 @@ def get_data_to_send():
 def get_users_to_send_data():
     c = user_table.find({}, {"email": 1})
     return list(c)
+
 
 def track_url_link(user_email, visited_links):
     user_table.update({"email": user_email}, {"$push" : {"visited_links" : visited_links}})
