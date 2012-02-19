@@ -1,16 +1,22 @@
-import redis
-
-r = redis.StrictRedis(host='localhost', port=6379, db=0)
-namespace = "area42:bahashed:"
-data_table = namespace+"datadump:"
-sent_table = namespace+"sent:"
-user_table = namespace+"user:"
+from settings import data_dump, sent_data, user_table
+import hashlib
 
 def subscribe_email(email):
-    pass
+    m = hashlib.md5()
+    m.update(email)
+    token = m.digest()
+    user_table.update({"email": email}, {"$set": {
+        "token": token,
+        "subscribed": False
+    }}, True)
+    return token
 
-def confirm(email):pass
+def confirm(email, token):
+    user = user_table.find_one({"email": email}, {"token": 1})
+    if user.token == token:
+        user_table.update({"email": email}, {"subscribed": True})
 
-def unsubscribe(email):pass
+def unsubscribe(email):
+    user_table.update({"email": email}, {"$set": {"subscribed": False}})
 
 def admin_query(start_date, end_date):pass
