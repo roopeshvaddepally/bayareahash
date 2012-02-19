@@ -18,5 +18,10 @@ def subscribe():
     return ''
 
 
+
+@app.route("/admin")
+def admin():
+    return "admin panel"
+
 if __name__ == '__main__':
     app.run(debug=True)

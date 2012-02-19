@@ -1,6 +1,10 @@
 import redis
 
 r = redis.StrictRedis(host='localhost', port=6379, db=0)
+namespace = "area42:bahashed:"
+data_table = namespace+"datadump:"
+sent_table = namespace+"sent:"
+user_table = namespace+"user:"
 
 def subscribe_email(email):
     pass
