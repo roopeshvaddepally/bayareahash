@@ -16,7 +16,9 @@ def index():
 def subscribe():
     email = request.values.get("email")
     token = subscribe_email(email)
-    mailer.send_email(email, token)
+    html_body = render_template("confirmation.html", email=email, token=token)
+    text_body = render_template("confirmation.txt", email=email, token=token)
+    mailer.send(email, html_body, text_body)
     return ''
 
 

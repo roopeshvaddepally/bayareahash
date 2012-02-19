@@ -3,9 +3,9 @@ import logging
 from marrow.mailer import Mailer, Message
 import datetime
 from construct_email import construct_html_email
-from settings import email_username, email_password, email_from
+from settings import email_user, email_password, email_from
 
-username = email_username
+username = email_user
 password = email_password
 from_email = email_from
 subject = 'something something'
@@ -37,13 +37,14 @@ class SendEmail(object):
 
     def send_email(self):
         '''Get the result map, format the email and send out emails'''
-        logging.info('Sending emails on: ' + str(datetime.datetime.now()))
+        # logging.info('Sending emails on: ' + str(datetime.datetime.now()))
+        print "email"
 
-        final_result = {"to" : "data"}
-        for email, data in final_result.iteritems():
-            body = construct_html_email(email, data)
-            logging.info('To: '+ email)
-            self.send(email, body["html"], body["plain"])
+        # final_result = {"to" : "data"}
+        # for email, data in final_result.iteritems():
+        #     body = construct_html_email(email, data)
+        #     logging.info('To: '+ email)
+        #     self.send(email, body["html"], body["plain"])
 
-        self.stop_sending()
+        # self.stop_sending()
 
