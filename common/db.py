@@ -1,6 +1,7 @@
 from settings import data_dump, sent_data, user_table
 import hashlib
 
+
 def subscribe_email(email):
     m = hashlib.md5()
     m.update(email)
@@ -11,17 +12,33 @@ def subscribe_email(email):
     }}, True)
     return token
 
+
 def confirm(email, token):
     user = user_table.find_one({"email": email}, {"token": 1})
     if user['token'] == token:
         user_table.update({"email": email}, {"$set": {"subscribed": True}})
 
+
 def unsubscribe(email):
     user_table.update({"email": email}, {"$set": {"subscribed": False}})
 
+
 def admin_query(start_date, end_date):
-    cursor = data_dump.find({"date" : {"$gte": start_date, "$lt": end_date}})
+    cursor = data_dump.find({"date_crawled" : {"$gte": start_date, "$lt": end_date}})
     return list(cursor)
+
+
+def data_to_send(data_list):
+    for data in data_list:
+        sent_data.update({"url" : data["url"]},
+            {"$set" :
+                {"category" : data["category"],
+                "url" : data["url"],
+                "title" : data["title"],
+                "description" : data["description"],
+                "thumbnail" : data["thumbnail"],
+                "meetup_date" : data["meetup_date"]}}, True)
+
 
 #This function takes a list of map
 def add_data(date, data_list):
@@ -33,4 +50,5 @@ def add_data(date, data_list):
                  "title" : data["title"],
                  "description" : data["description"],
                  "thumbnail" : data["thumbnail"],
-                  "date" : date}}, True)
+                 "meetup_date" : data["meetup_date"],
+                 "date_crawled" : date}}, True)

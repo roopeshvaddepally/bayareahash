@@ -22,6 +22,9 @@ def subscribe():
 def admin():
     return "admin panel"
 
+@app.route("/l")
+def track():
+    return "the URL tracker"
 
 if __name__ == '__main__':
     app.run(debug=True)
