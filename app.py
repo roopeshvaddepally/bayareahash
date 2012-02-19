@@ -26,6 +26,9 @@ def subscribe():
 def admin():
     return "admin panel"
 
+@app.route("/l")
+def track():
+    return "the URL tracker"
 
 @app.route("/confirm")
 def confirmation():
