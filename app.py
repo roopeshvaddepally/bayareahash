@@ -43,7 +43,7 @@ def curate():
 
 
 @app.route("/filtered")
-def admin():
+def filtered():
     ids = request.values.get("ids")
     return "true"
 
