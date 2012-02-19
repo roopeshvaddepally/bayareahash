@@ -6,7 +6,8 @@ data_table = namespace+"datadump:"
 sent_table = namespace+"sent:"
 user_table = namespace+"user:"
 
-def subscribe(email):pass
+def subscribe(email):
+	pass
 
 def confirm(email):pass
 
