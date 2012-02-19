@@ -11,10 +11,10 @@ def subscribe_email(email):
     }}, True)
     return token
 
-def confirm(email, token):
-    user = user_table.find_one({"email": email}, {"token": 1})
+def confirm(token):
+    user = user_table.find_one({"token": token}, {"token": 1})
     if user['token'] == token:
-        user_table.update({"email": email}, {"$set": {"subscribed": True}})
+        user_table.update({"token": token}, {"$set": {"subscribed": True}})
 
 def unsubscribe(email):
     user_table.update({"email": email}, {"$set": {"subscribed": False}})

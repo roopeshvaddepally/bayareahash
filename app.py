@@ -25,5 +25,18 @@ def admin():
     return "admin panel"
 
 
+@app.route("/confirm")
+def confirmation():
+    token = request.values.get("token")
+    confirm(token)
+    return "confirmed. Thanks"
+
+
+@app.route("/unsubscribe")
+def unsubscribe_email():
+    email = request.values.get("email")
+    unsubscribe(email)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
