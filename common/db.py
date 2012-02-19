@@ -23,4 +23,10 @@ def confirm(email, token):
 
 def unsubscribe(email):pass
 
-def admin_query(start_date, end_date):pass
+def admin_query(start_date, end_date):
+    data = data_dump.find()
+
+
+def add_data(date, data_list):
+    for data in data_list:
+        data_dump.insert({"category": ""})
