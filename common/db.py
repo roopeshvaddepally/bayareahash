@@ -1,3 +1,8 @@
+import sys
+from os.path import dirname, abspath, join
+here = join(dirname(abspath(__file__)), "..")
+sys.path.append(here)
+
 from settings import data_dump, sent_data, user_table
 from common.time import get_next_week
 import hashlib
