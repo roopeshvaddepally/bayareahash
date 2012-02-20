@@ -1,6 +1,6 @@
 from flask import Flask, render_template, request, jsonify
-from common.db import *
-from common.time import get_next_week
+from common.db import (subscribe_email, admin_query, filter_ids_based_on,
+                       set_data_to_send, confirm, unsubscribe)
 from common.mail import SendEmail
 import os
 
@@ -40,7 +40,6 @@ def isAdmin():
 
 @app.route("/curate")
 def curate():
-    datetimes = get_next_week()
     data = admin_query()
     return jsonify(aaData = data)
 

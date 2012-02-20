@@ -1,8 +1,6 @@
 import logging
 
 from marrow.mailer import Mailer, Message
-import datetime
-from string import Template
 from settings import email_user, email_password, email_from
 from common.db import get_data_to_send, get_users_to_send_data
 

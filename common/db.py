@@ -8,10 +8,12 @@ def subscribe_email(email):
     m = hashlib.md5()
     m.update(email)
     token = m.hexdigest()
-    user_table.update({"email": email}, {"$set": {
-        "token": token,
-        "subscribed": False
-    }}, True)
+    user_table.update({"email": email}, {
+        "$set": {
+            "token": token,
+            "subscribed": False
+        }
+    }, True)
     return token
 
 
@@ -27,10 +29,16 @@ def unsubscribe(email):
 
 def admin_query():
     times = get_next_week()
-    cursor = data_dump.find({"date_crawled" : {"$gte": times[0], "$lt": times[1]}})
+    cursor = data_dump.find({
+        "date_crawled": {
+            "$gte": times[0],
+            "$lt": times[1]
+         }
+    })
     arr = list(cursor)
     for k in arr:
-        k["description"] = (k["description"][:75] + '..') if len(k["description"]) > 75 else k["description"]
+        if len(k['description']) > 75:
+            k['description'] = k['description'][:75] + ".."
         k["_id"] = str(k["_id"])
         k["date_crawled"] = k["date_crawled"].strftime('%d%b%Y')
         k["DT_RowId"] = str(k["_id"])
@@ -39,19 +47,23 @@ def admin_query():
 
 def set_data_to_send(data_list):
     for data in data_list:
-        sent_data.update({"url" : data["url"]},
-            {"$set" :
-                {"category" : data["category"],
-                "url" : data["url"],
-                "title" : data["title"],
-                "description" : data["description"],
-                "thumbnail" : data["thumbnail"],
-                "meetup_date" : data["meetup_date"]}}, True)
+        sent_data.update({
+            "url": data["url"]
+        }, {
+            "$set": {
+                "category": data["category"],
+                "url": data["url"],
+                "title": data["title"],
+                "description": data["description"],
+                "thumbnail": data["thumbnail"],
+                "meetup_date": data["meetup_date"]
+            }
+        }, True)
 
 
 def filter_ids_based_on(ids):
     i = [ObjectId(each) for each in ids]
-    cursor = data_dump.find({"_id" : {"$in" : i} })
+    cursor = data_dump.find({"_id": {"$in": i}})
     return list(cursor)
 
 
@@ -66,17 +78,23 @@ def get_users_to_send_data():
 
 
 def track_url_link(user_email, visited_links):
-    user_table.update({"email": user_email}, {"$push" : {"visited_links" : visited_links}})
+    user_table.update({"email": user_email}, {"$push": {
+        "visited_links": visited_links
+    }})
 
 
 def add_data(date, data_list):
     for data in data_list:
-        data_dump.update({"url" : data["url"]},
-         {"$set":
-                {"category": data["category"],
-                 "url" : data["url"],
-                 "title" : data["title"],
-                 "description" : data["description"],
-                 "thumbnail" : data["thumbnail"],
-                 "meetup_date" : data["meetup_date"],
-                 "date_crawled" : date}}, True)
+        data_dump.update({
+            "url": data["url"]
+        }, {
+            "$set": {
+                  "category": data["category"],
+                  "url": data["url"],
+                  "title": data["title"],
+                  "description": data["description"],
+                  "thumbnail": data["thumbnail"],
+                  "meetup_date": data["meetup_date"],
+                  "date_crawled": date
+             }
+        }, True)
