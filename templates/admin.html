@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>{% block title %}{{ title }}{% endblock %}</title>
+{% extends "base.html" %}
+
+{% block title %}Admin- BAHashed{% endblock %}
   <link rel="stylesheet" type="text/css" href="/static/css/app.css">
-  <script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
-  <script type="text/javascript" src="/static/js/jquery.dataTables.min.js"></script>
   <style type="text/css" title="currentStyle">
     @import "/static/css/demo_page.css";
     @import "/static/css/demo_table.css";
     @import "/static/css/demo_table_jui.css";
   </style>
+  {% block javascript %}
+  {{ super() }}
   <script type="text/javascript" src="http://platform.linkedin.com/in.js">
     api_key: 8nmza1hiy5pf
     authorize: true
@@ -40,8 +39,6 @@
       "sAjaxSource": "/curate",
       "bProcessing": true,
       "bJQueryUI": true,
-      "sScrollY": "100%",
-      "bScrollCollapse": true,
       "bPaginate": false,
       "oTableTools": {
         "sRowSelect": "multi",
@@ -58,8 +55,6 @@
         { "mDataProp": "date_crawled" }
       ]
     });
-    var ofc = new FixedColumns( oTable );
-    oFC.fnSetRowHeight($('#dtable tbody tr', 100));
     setTimeout(function() {
       $('#dtable tr').click( function() {
         $(this).toggleClass('row_selected');
@@ -68,11 +63,24 @@
   }
 
   function submit() {
-    console.log();
+    var ids = [];
     $.each($('.row_selected'), function(index, value) { 
+      ids.push($(this).attr('id'));
+    });
+    var idsStr = ids.join(',');
+    $.ajax({
+      url: "/filtered?ids=" + idsStr,
+      context: document.body,
+      success: function(resp){
+        if(resp === "true") {
+          alert('howdy');
+        } else {
+        }
+      }
     });
   }
   </script>
+  {% endblock javascript %}
   <style type="text/css">
     .submit {
       background: #0571A6;
@@ -90,6 +98,7 @@
   </style>
 </head>
 <body>
+  {% block content %}
   <div id="login">
     <script type="IN/Login" data-onAuth="onLinkedInAuth"></script>
   </div>
@@ -99,14 +108,14 @@
   <table cellpadding="0" cellspacing="0" border="0" class="display" id="dtable">
     <thead>
       <tr>
-        <th width="20%">category</th>
-        <th width="25%">description</th>
-        <th width="25%">title</th>
-        <th width="25%">url</th>
-        <th width="25%">meetup_date</th>
-        <th width="25%">thumbnail</th>
-        <th width="25%">ID</th>
-        <th width="25%">Date Crawled</th>
+        <th>category</th>
+        <th>description</th>
+        <th>title</th>
+        <th>url</th>
+        <th>meetup_date</th>
+        <th>thumbnail</th>
+        <th>ID</th>
+        <th>Date Crawled</th>
       </tr>
     </thead>
     <tbody>
@@ -116,6 +125,7 @@
   <div id="forbidden" style="display:none">
     You do not belong here :) , lets get you to the <a href="/">home page</a>
   </div>
+  {% endblock content %}
 </body>
 </html>
   

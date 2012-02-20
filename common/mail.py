@@ -1,8 +1,6 @@
-import logging
+# import logging
 
 from marrow.mailer import Mailer, Message
-import datetime
-from string import Template
 from settings import email_user, email_password, email_from
 from common.db import get_data_to_send, get_users_to_send_data
 
@@ -10,20 +8,21 @@ username = email_user
 password = email_password
 from_email = email_from
 subject = 'something something'
-logging.basicConfig(filename='email.log', level=logging.INFO)
+# logging.basicConfig(filename='email.log', level=logging.INFO)
+
 
 class SendEmail(object):
     def __init__(self):
         self.mailer = Mailer(dict(
-            transport = dict(
-                use = 'smtp',
-                host = 'smtp.gmail.com',
-                port = '587',
-                username = username,
-                password = password,
-                tls = 'required',
-                debug = False),
-            manager = dict()))
+            transport=dict(
+                use='smtp',
+                host='smtp.gmail.com',
+                port='587',
+                username=username,
+                password=password,
+                tls='required',
+                debug=False),
+            manager=dict()))
         self.mailer.start()
 
     def send(self, to, html_body, plain_body):
@@ -33,10 +32,8 @@ class SendEmail(object):
         message.rich = html_body
         self.mailer.send(message)
 
-
     def stop_sending(self):
         self.mailer.stop()
-
 
     def construct_html_email(self):
         user_list = get_users_to_send_data()
@@ -50,4 +47,5 @@ class SendEmail(object):
         #result_map["html"] = text
 
         for user in user_list:
-            self.send(to=user["email"], html_body="%s" % data, plain_body="data_plain")
+            self.send(to=user["email"], html_body="%s" % data,
+                      plain_body="data_plain")
