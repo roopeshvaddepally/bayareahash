@@ -1,4 +1,4 @@
-from settings import data_dump, sent_data, user_table
+from settings import data_dump, sent_data, user_table, admin_table
 from common.time import get_next_week
 from  pymongo.objectid import ObjectId
 import hashlib
@@ -98,3 +98,8 @@ def add_data(date, data_list):
                   "date_crawled": date
              }
         }, True)
+
+
+def get_admin_for_authentication(user):
+    admin = admin_table.find_one({"user": user}, {"password": 1}) or {}
+    return admin

@@ -5,6 +5,7 @@ c = Connection()
 data_dump = c.bayareahash.data_dump
 sent_data = c.bayareahash.sent_data
 user_table = c.bayareahash.user_table
+admin_table = c.bayareahash.admin_table
 
 email_user = "something"
 email_password = "something else"

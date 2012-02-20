@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, abort
 from common.db import (subscribe_email, admin_query, filter_ids_based_on,
                        set_data_to_send, confirm, unsubscribe)
 from common.mail import SendEmail
+from common.authentication import authenticate_user
 import os
 
 app = Flask(__name__)
@@ -74,6 +75,19 @@ def unsubscribe_email():
 def trigger():
     os.system("python common/run.py &")
     return "Your request has been submitted, sending out emails now!"
+
+
+@app.route("/admin_login", methods=['POST', 'GET'])
+def admin_login():
+    if request.method == "POST":
+        user, password = request.form.get("username"), request.form.get("password")
+        is_authed = authenticate_user(user, password)
+        if is_authed:
+            return "logged in"
+        else:
+            return abort(401)
+    elif request.method == "GET":
+        return render_template("admin_login.html")
 
 if __name__ == '__main__':
     app.debug = True

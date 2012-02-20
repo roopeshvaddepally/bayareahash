@@ -1,4 +1,4 @@
-import logging
+# import logging
 
 from marrow.mailer import Mailer, Message
 from settings import email_user, email_password, email_from
@@ -8,7 +8,7 @@ username = email_user
 password = email_password
 from_email = email_from
 subject = 'something something'
-logging.basicConfig(filename='email.log', level=logging.INFO)
+# logging.basicConfig(filename='email.log', level=logging.INFO)
 
 
 class SendEmail(object):
