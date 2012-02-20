@@ -1,15 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Admin- BAHashed</title>
+{% extends "base.html" %}
+
+{% block title %}Admin- BAHashed{% endblock %}
   <link rel="stylesheet" type="text/css" href="/static/css/app.css">
-  <script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
-  <script type="text/javascript" src="/static/js/jquery.dataTables.min.js"></script>
   <style type="text/css" title="currentStyle">
     @import "/static/css/demo_page.css";
     @import "/static/css/demo_table.css";
     @import "/static/css/demo_table_jui.css";
   </style>
+  {% block javascript %}
+  {{ super() }}
   <script type="text/javascript" src="http://platform.linkedin.com/in.js">
     api_key: 8nmza1hiy5pf
     authorize: true
@@ -81,6 +80,7 @@
     });
   }
   </script>
+  {% endblock javascript %}
   <style type="text/css">
     .submit {
       background: #0571A6;
@@ -98,6 +98,7 @@
   </style>
 </head>
 <body>
+  {% block content %}
   <div id="login">
     <script type="IN/Login" data-onAuth="onLinkedInAuth"></script>
   </div>
@@ -124,6 +125,7 @@
   <div id="forbidden" style="display:none">
     You do not belong here :) , lets get you to the <a href="/">home page</a>
   </div>
+  {% endblock content %}
 </body>
 </html>
   

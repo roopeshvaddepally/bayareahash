@@ -1,12 +1,25 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<title>{% block title %}{{ title }}{% endblock %}</title>
-	<link rel="stylesheet" type="text/css" href="/static/css/app.css">
-</head>
-<body>
-{% block content %}
-{% endblock %}
-<script type="text/javascript" src="/static/js/app.js"></script>
-</body>
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta charset="UTF-8" />
+
+    <title>{% block title %}{{ title }}{% endblock %}</title>
+
+    {% block css %}
+    <link rel="stylesheet" type="text/css" href="/static/css/app.css">
+    {% endblock %}
+
+    {% block javascript %}
+    <script type="text/javascript" src="/static/js/jquery-1.7.1.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="/statics/js/app.js"></script>
+    {% endblock %}
+
+  </head>
+  <body>
+    {% block content %}
+    {% endblock %}
+    <script type="text/javascript" src="/static/js/app.js"></script>
+  </body>
 </html>
