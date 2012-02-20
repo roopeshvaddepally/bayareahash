@@ -41,7 +41,7 @@ def isAdmin():
 @app.route("/curate")
 def curate():
     data = admin_query()
-    return jsonify(aaData = data)
+    return jsonify(aaData=data)
 
 
 @app.route("/filtered")
@@ -51,9 +51,11 @@ def filtered():
     set_data_to_send(filtered)
     return "true"
 
+
 @app.route("/l")
 def track():
     return "the URL tracker"
+
 
 @app.route("/confirm")
 def confirmation():
@@ -66,6 +68,7 @@ def confirmation():
 def unsubscribe_email():
     email = request.values.get("email")
     unsubscribe(email)
+
 
 @app.route("/trigger")
 def trigger():
