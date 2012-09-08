@@ -5,7 +5,11 @@ sys.path.append(here)
 
 from settings import data_dump, sent_data, user_table, admin_table
 from common.time import get_next_week
-from  pymongo.objectid import ObjectId
+try:
+    from  pymongo.objectid import ObjectId
+except ImportError as ie:
+    print "pymongo.objectid.ObjectId is from 1.7 version, trying to import 2.3"
+    from bson.objectid import ObjectId
 import hashlib
 
 

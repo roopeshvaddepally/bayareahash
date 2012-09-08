@@ -89,6 +89,25 @@ def admin_login():
     elif request.method == "GET":
         return render_template("admin_login.html")
 
+@app.route("/hackerbuddy")
+def hacker_buddy_home(methods=['GET']):
+    return "home"
+
+@app.route("/hackerbuddy/<hackathon_name>/", methods=['GET'])
+def hackathon_details(hackathon_name):
+    return "hackathon details"
+
+@app.route("/hackerbuddy/<hackathon_name>/polls/", methods=['GET'])
+def hackathon_polls(hackathon_name):
+    return "all polls (%s)" % hackathon_name
+
+@app.route("/hackerbuddy/<hackathon_name>/<poll_id>", methods=['GET'])
+def poll_details(hackathon_name, poll_id):
+    return "poll details for (%s)" % poll_id
+
+
+# @app.route("/hackerbuddy/")
+
 if __name__ == '__main__':
     app.debug = True
     app.run("0.0.0.0", 5000, debug=True)
