@@ -6,17 +6,20 @@ env.hosts = ['107.21.101.188']
 env.user = 'ec2-user'
 env.key_filename = '/Users/zengr/dev/amazon/zengr.pem'
 
-temp_path = "/tmp"
-
-local_web = "/Users/zengr/dev/python/bayareahash"
-git_exclude = local_web + "/.git/*"
-
+remote_temp_path = "/tmp"
 remote_web =  "/var/www/"
+
+local_temp_path = "/tmp/"
+local_web = "/Users/zengr/dev/python/bayareahash"
 
 def deploy_web():
     '''Deployment of the flask webapp'''
-    put(local_web, temp_path)
-    with cd(temp_path):
+    local("cp -R " + local_web + " " + local_temp_path)
+    local("rm -rf /tmp/bayareahash/.git");
+    local("rm -rf /tmp/bayareahash/*.pyc");
+    put(local_temp_path + "/bayareahash", remote_temp_path)
+
+    with cd(remote_temp_path):
         run('sudo cp -R bayareahash/ /var/www/flaskapps/')
         clean()
     with cd('/var/www/'):
