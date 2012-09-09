@@ -7,6 +7,8 @@ sent_data = c.bayareahash.sent_data
 user_table = c.bayareahash.user_table
 admin_table = c.bayareahash.admin_table
 
+hackathon_table = c.hackerbuddy.hackathon
+
 email_user = "something"
 email_password = "something else"
 email_from = "r@v.com"

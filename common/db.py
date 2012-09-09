@@ -3,7 +3,8 @@ from os.path import dirname, abspath, join
 here = join(dirname(abspath(__file__)), "..")
 sys.path.append(here)
 
-from settings import data_dump, sent_data, user_table, admin_table
+from settings import (data_dump, sent_data, user_table, admin_table,
+                      hackathon_table)
 from common.time import get_next_week
 try:
     from  pymongo.objectid import ObjectId
@@ -112,3 +113,44 @@ def add_data(date, data_list):
 def get_admin_for_authentication(user):
     admin = admin_table.find_one({"user": user}, {"password": 1}) or {}
     return admin
+
+
+def create_hackathon(title, description):
+    return hackathon_table.insert({
+        "title": title,
+        "description": description,
+        "polls": [],
+    })
+
+def add_poll(title, poll):
+    return hackathon_table.update({
+        "title": title,
+    }, {
+        "$addToSet": {
+            "polls": poll
+        }
+    })
+
+def update_poll_option(title, poll_title, option, up_down):
+    return hackathon_table.update({
+        'title': title,
+        'polls.ptitle': poll_title
+        'polls.popts.option': option
+    }, {
+        '$inc': {
+            "polls.$.popts.$.option": up_down
+        }
+    })
+
+class Poll:
+    def __init__(self, title, option_list):
+        self.title = title
+        self.option_list = [dict(option=k, count=0) for k in option_list]
+    def to_mongo(self):
+        return {
+            "title": self.title,
+            "popts": self.option_list
+        }
+
+def add_poll_to_hackthon(hackathon_title, poll_title, option_list):
+    return add_poll(hackathon_title, Poll(poll_title, option_list))
