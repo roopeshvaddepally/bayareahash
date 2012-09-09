@@ -118,13 +118,14 @@ def get_admin_for_authentication(user):
 
 def get_hackthon_polls(hackathon_title):
     hackathon = hackathon_table.find_one({"title" : hackathon_title}) or {}
-    return hackathon.get("polls")
+    return hackathon.get("polls", [])
 
 def get_all_hackathons():
     return list(hackathon_table.find({}, {"title": 1}))
 
 def get_hackthon_polls_by_name(hackathon_title, poll_name):
-    return polls_table.find_one({"hackathon_title" : hackathon_title, "poll_title" : poll_name}).get("polls", {})
+    polls = polls_table.find_one({"hackathon_title" : hackathon_title, "poll_title" : poll_name}) or {}
+    return polls.get("polls", [])
 
 
 def create_hackathon(title, description):
