@@ -10,7 +10,7 @@ remote_temp_path = "/tmp"
 remote_web =  "/var/www/"
 
 local_temp_path = "/tmp/"
-local_web = "/Users/zengr/dev/python/bayareahash"
+local_web = "/Users/zengr/dev/tc_hackathon/bayareahash"
 
 def deploy_web():
     '''Deployment of the flask webapp'''

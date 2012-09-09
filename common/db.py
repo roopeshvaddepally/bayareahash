@@ -134,7 +134,7 @@ def add_poll(title, poll):
 def update_poll_option(title, poll_title, option, up_down):
     return hackathon_table.update({
         'title': title,
-        'polls.ptitle': poll_title
+        'polls.ptitle': poll_title,
         'polls.popts.option': option
     }, {
         '$inc': {

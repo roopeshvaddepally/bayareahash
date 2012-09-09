@@ -105,8 +105,19 @@ def hackathon_polls(hackathon_name):
 def poll_details(hackathon_name, poll_id):
     return "poll details for (%s)" % poll_id
 
+@app.route("/hackerbuddy/poll/create", methods=['POST'])
+def create_poll():
+    poll_title = request.form['title'];
+    poll_options = request.form['options'];
+    return "Create poll for: " + poll_title + " and options: " + poll_options;
 
-# @app.route("/hackerbuddy/")
+
+@app.route("/hackerbuddy/poll/vote", methods=['POST'])
+def vote_on_poll():
+    poll_id=request.form['id'];
+    option_id = request.form['option']
+    return "Update poll:" + poll_id + " and option: " + option_id;
+
 
 if __name__ == '__main__':
     app.debug = True
