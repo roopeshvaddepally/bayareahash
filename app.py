@@ -1,10 +1,11 @@
-from flask import Flask, render_template, request, jsonify, abort
+from flask import Flask, render_template, request, Response, abort
 from common.db import (subscribe_email, admin_query, filter_ids_based_on,
                        set_data_to_send, confirm, unsubscribe, create_hackathon, add_poll_to_hackthon,
                        upvote_poll_option, get_hackthon_polls, get_hackthon_polls_by_name, get_all_hackathons)
 from common.mail import SendEmail
 from common.authentication import authenticate_user
 import os
+import datetime
 
 app = Flask(__name__)
 
@@ -94,17 +95,43 @@ def admin_login():
 
 
 #HackerBuddy app
-@app.route("/hackerbuddy")
+try:
+    import json
+except ImportError:
+    import simplejson as json
+
+try:
+    from bson.objectid import ObjectId
+except:
+    pass
+
+
+class APIEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (datetime.datetime, datetime.date)):
+            return obj.ctime()
+        elif isinstance(obj, datetime.time):
+            return obj.isoformat()
+        elif isinstance(obj, ObjectId):
+            return str(obj)
+        return json.JSONEncoder.default(self, obj)
+
+
+def jsonify(data):
+    return Response(json.dumps(data, cls=APIEncoder),
+        mimetype='application/json')
+@app.route("/hackerbuddy/")
 def hacker_buddy_home(methods=['GET']):
-    return jsonify(result=get_all_hackathons())
+    return jsonify(get_all_hackathons())
 
 @app.route("/hackerbuddy/<hackathon_name>/polls/", methods=['GET'])
+@app.route("/hackerbuddy/<hackathon_name>/", methods=['GET'])
 def hackathon_polls(hackathon_name):
-    return jsonify(result=get_hackthon_polls(hackathon_name))
+    return jsonify(get_hackthon_polls(hackathon_name))
 
-@app.route("/hackerbuddy/<hackathon_name>/<poll_name>", methods=['GET'])
+@app.route("/hackerbuddy/<hackathon_name>/<poll_name>/", methods=['GET'])
 def poll_details(hackathon_name, poll_name):
-    return jsonify(result=get_hackthon_polls_by_name(hackathon_name, poll_name))
+    return jsonify(get_hackthon_polls_by_name(hackathon_name, poll_name))
 
 @app.route("/hackerbuddy/hackathon/create", methods=['POST'])
 def create_new_hackathon():
@@ -113,7 +140,7 @@ def create_new_hackathon():
     print("Create poll for: " + hackathon_title + " and options: " + hackathon_desc)
     create_hackathon(hackathon_title, hackathon_desc)
 
-    return jsonify(result="SUCCESS")
+    return jsonify("SUCCESS")
 
 @app.route("/hackerbuddy/poll/create", methods=['POST'])
 def create_poll():
@@ -124,7 +151,7 @@ def create_poll():
 
     add_poll_to_hackthon(hackathon_title, poll_title, poll_options)
 
-    return jsonify(result="SUCCESS")
+    return jsonify("SUCCESS")
 
 
 @app.route("/hackerbuddy/poll/vote", methods=['POST'])
@@ -136,7 +163,7 @@ def vote_on_poll():
 
     upvote_poll_option(hackathon_title, poll_title, option)
 
-    return jsonify(result="SUCCESS")
+    return jsonify("SUCCESS")
 
 
 if __name__ == '__main__':

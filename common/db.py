@@ -117,7 +117,8 @@ def get_admin_for_authentication(user):
 
 
 def get_hackthon_polls(hackathon_title):
-    return hackathon_table.find_one({"title" : hackathon_title}).polls
+    hackathon = hackathon_table.find_one({"title" : hackathon_title}) or {}
+    return hackathon.get("polls")
 
 def get_all_hackathons():
     return list(hackathon_table.find({}, {"title": 1}))
