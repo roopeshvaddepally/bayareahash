@@ -4,7 +4,7 @@ here = join(dirname(abspath(__file__)), "..")
 sys.path.append(here)
 
 from settings import (data_dump, sent_data, user_table, admin_table,
-                      hackathon_table)
+                      hackathon_table, polls_table)
 from common.time import get_next_week
 try:
     from  pymongo.objectid import ObjectId
@@ -115,30 +115,74 @@ def get_admin_for_authentication(user):
     return admin
 
 
+
+def get_hackthon_polls(hackathon_title):
+    return hackathon_table.find_one({"title" : hackathon_title}).polls
+
+def get_all_hackathons():
+    return list(hackathon_table.find({}, {"title": 1}))
+
+def get_hackthon_polls_by_name(hackathon_title, poll_name):
+    return polls_table.find_one({"hackathon_title" : hackathon_title, "poll_title" : poll_name}).get("polls", {})
+
+
 def create_hackathon(title, description):
     return hackathon_table.insert({
         "title": title,
         "description": description,
-        "polls": [],
+        "polls": []
     })
 
-def add_poll(title, poll):
-    return hackathon_table.update({
+
+def add_poll_to_hackthon(hackathon_title, poll_title, option_list):
+    """
+        hackathon_title = String
+        poll_title = String
+        option_list = [String, String, ... n]
+    """
+    return _add_poll(hackathon_title, Poll(poll_title, option_list))
+
+
+def _add_poll(title, poll):
+    hackathon_table.update({
         "title": title,
     }, {
         "$addToSet": {
-            "polls": poll
+            "polls": poll.title
         }
     })
 
-def update_poll_option(title, poll_title, option, up_down):
-    return hackathon_table.update({
-        'title': title,
-        'polls.ptitle': poll_title,
-        'polls.popts.option': option
+    polls_table.insert({
+        "hackathon_title": title,
+        "poll_title": poll.title,
+        "polls": poll.option_list
+    }, )
+
+
+def upvote_poll_option(hackathon_title, poll_title, option):
+    """
+        hackathon_title = String
+        poll_title = String
+        option =  String
+    """
+    _update_poll_option(hackathon_title, poll_title, option, 1);
+
+
+def _update_poll_option(hackathon_title, poll_title, option, up_down):
+    """
+        hackathon_title = String
+        poll_title = String
+        option =  String
+        up_down = 1/-1
+    """
+
+    return polls_table.update({
+        'hackathon_title': hackathon_title,
+        'poll_title': poll_title,
+        'polls.option': option
     }, {
         '$inc': {
-            "polls.$.popts.$.option": up_down
+            "polls.$.count": up_down
         }
     })
 
@@ -146,11 +190,4 @@ class Poll:
     def __init__(self, title, option_list):
         self.title = title
         self.option_list = [dict(option=k, count=0) for k in option_list]
-    def to_mongo(self):
-        return {
-            "title": self.title,
-            "popts": self.option_list
-        }
 
-def add_poll_to_hackthon(hackathon_title, poll_title, option_list):
-    return add_poll(hackathon_title, Poll(poll_title, option_list))

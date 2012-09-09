@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, jsonify, abort
 from common.db import (subscribe_email, admin_query, filter_ids_based_on,
-                       set_data_to_send, confirm, unsubscribe)
+                       set_data_to_send, confirm, unsubscribe, create_hackathon, add_poll_to_hackthon,
+                       upvote_poll_option, get_hackthon_polls, get_hackthon_polls_by_name, get_all_hackathons)
 from common.mail import SendEmail
 from common.authentication import authenticate_user
 import os
@@ -89,40 +90,53 @@ def admin_login():
     elif request.method == "GET":
         return render_template("admin_login.html")
 
+
+
+
+#HackerBuddy app
 @app.route("/hackerbuddy")
 def hacker_buddy_home(methods=['GET']):
-    return "home"
-
-@app.route("/hackerbuddy/<hackathon_name>/", methods=['GET'])
-def hackathon_details(hackathon_name):
-    return "hackathon details"
+    return jsonify(result=get_all_hackathons())
 
 @app.route("/hackerbuddy/<hackathon_name>/polls/", methods=['GET'])
 def hackathon_polls(hackathon_name):
-    return "all polls (%s)" % hackathon_name
+    return jsonify(result=get_hackthon_polls(hackathon_name))
 
-@app.route("/hackerbuddy/<hackathon_name>/<poll_id>", methods=['GET'])
-def poll_details(hackathon_name, poll_id):
-    return "poll details for (%s)" % poll_id
+@app.route("/hackerbuddy/<hackathon_name>/<poll_name>", methods=['GET'])
+def poll_details(hackathon_name, poll_name):
+    return jsonify(result=get_hackthon_polls_by_name(hackathon_name, poll_name))
 
 @app.route("/hackerbuddy/hackathon/create", methods=['POST'])
-def create_hackathon():
-    hackathon_title = request.form['title'];
-    hackathon_desc = request.form['desc'];
-    return "Create poll for: " + hackathon_title + " and options: " + hackathon_desc;
+def create_new_hackathon():
+    hackathon_title = request.form['title']
+    hackathon_desc = request.form['desc']
+    print("Create poll for: " + hackathon_title + " and options: " + hackathon_desc)
+    create_hackathon(hackathon_title, hackathon_desc)
+
+    return jsonify(result="SUCCESS")
 
 @app.route("/hackerbuddy/poll/create", methods=['POST'])
 def create_poll():
-    poll_title = request.form['title'];
-    poll_options = request.form['options'];
-    return "Create poll for: " + poll_title + " and options: " + poll_options;
+    hackathon_title = request.form['hackathon_title']
+    poll_title = request.form['poll_title']
+    poll_options = request.form.getlist('option')
+    print("Create poll for: " + poll_title + " and options: " + str(poll_options))
+
+    add_poll_to_hackthon(hackathon_title, poll_title, poll_options)
+
+    return jsonify(result="SUCCESS")
 
 
 @app.route("/hackerbuddy/poll/vote", methods=['POST'])
 def vote_on_poll():
-    poll_id=request.form['id'];
-    option_id = request.form['option']
-    return "Update poll:" + poll_id + " and option: " + option_id;
+    hackathon_title = request.form['hackathon_title']
+    poll_title=request.form['poll_title']
+    option = request.form['option']
+    print("Update poll:" + poll_title + " and option: " + option)
+
+    upvote_poll_option(hackathon_title, poll_title, option)
+
+    return jsonify(result="SUCCESS")
 
 
 if __name__ == '__main__':

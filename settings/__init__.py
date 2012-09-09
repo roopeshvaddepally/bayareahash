@@ -8,6 +8,7 @@ user_table = c.bayareahash.user_table
 admin_table = c.bayareahash.admin_table
 
 hackathon_table = c.hackerbuddy.hackathon
+polls_table = c.hackerbuddy.polls_table
 
 email_user = "something"
 email_password = "something else"
